@@ -7,6 +7,7 @@ A simple UptimeRobot style app that sends HTTP requests to specified websites at
 - [x] Server is connectable
 - [x] Can log in with password set in `.env`
 - [x] Sets cookies that last 1 day
+- [ ] Finish building basic page for dashboard
 - [ ] Pinging functionality
 - [ ] Ability to add pingers from the dashboard
 - [ ] User functionality
