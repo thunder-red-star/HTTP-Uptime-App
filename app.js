@@ -29,12 +29,20 @@ module.exports = () => {
 	app.set("view engine", "html");
 
 	app.get('/login', (res, req, next) => {
-		return render(res, req, 'index.ejs');
+		return render(res, req, 'login.ejs');
 	});
 
 	app.post('/login', (res, req, next) => {
-		if (pw.verifyPassword(req.body.input)) {
-			render(res, req, 'index.ejs', {"error": "You have inputted an incorrect password."});
+		if (!pw.verifyPassword(req.body.input)) {
+			return render(res, req, 'login.ejs', {"error": "You have inputted an incorrect password."});
+		}
+		else {
+			res.cookie('login', true, {maxAge: 1800000});
+			if (req.body.savePW == true) {
+				res.cookie('saveLogin', process.env.PASSWORD);
+				
+			}
+			return res.redirect('/dashboard')
 		}
 	});
 }
