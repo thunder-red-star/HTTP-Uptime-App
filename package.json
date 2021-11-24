@@ -1,0 +1,23 @@
+{
+  "name": "HTTP-Uptime-App",
+  "version": "1.0.0",
+  "description": "A simple UptimeRobot style app that sends HTTP requests to specified websites at intervals.  ## Features * Send requests at specifi-able intervals * Password protected front-end (perfect for Replit) ## Setup 1.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thunder-red-star/HTTP-Uptime-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thunder-red-star/HTTP-Uptime-App/issues"
+  },
+  "homepage": "https://github.com/thunder-red-star/HTTP-Uptime-App#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
