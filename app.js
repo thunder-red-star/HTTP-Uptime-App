@@ -46,18 +46,23 @@ module.exports = () => {
 					return res.redirect('/dashboard');
 				}
 			}
-		}
-		try {
-			if (!pw.verifyPassword(req.body.input)) {
-				return render(res, req, 'login.ejs', { "error": "You have inputted an incorrect password." });
-			}
-			else {
-				res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
-				return res.redirect('/dashboard');
+			catch {
+				return render(res, req, 'login.ejs', { "error": "An internal server error has occurred. Please try again later." });
 			}
 		}
-		catch {
-			return render(res, req, 'login.ejs', { "error": "An internal server error has occurred. Please try again later." });
+		else {
+			try {
+				if (!pw.verifyPassword(req.body.input)) {
+					return render(res, req, 'login.ejs', { "error": "You have inputted an incorrect password." });
+				}
+				else {
+					res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+					return res.redirect('/dashboard');
+				}
+			}
+			catch {
+				return render(res, req, 'login.ejs', { "error": "An internal server error has occurred. Please try again later." });
+			}
 		}
 	});
 }
