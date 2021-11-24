@@ -12,6 +12,7 @@ const bodyParser = require("body-parser");
 const pw = require('./utils/password.js');
 const render = require('./utils/render.js')
 
+const saveAge = 3600000;
 module.exports = () => {
 	const templateDir = path.resolve(`${dataDir}${path.sep}templates`);
 
@@ -33,16 +34,30 @@ module.exports = () => {
 	});
 
 	app.post('/login', (res, req, next) => {
-		if (!pw.verifyPassword(req.body.input)) {
-			return render(res, req, 'login.ejs', {"error": "You have inputted an incorrect password."});
-		}
-		else {
-			res.cookie('login', true, {maxAge: 1800000});
-			if (req.body.savePW == true) {
-				res.cookie('saveLogin', process.env.PASSWORD);
-				
+		if (res.cookies.saveLogin != undefined) {
+			try {
+				// wipe broken cookie
+				if (!pw.verifyPassword(req.cookies.saveLogin)) {
+					res.clearCookie('saveLogin');
+					return render(res, req, 'login.ejs', { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
+				}
+				else {
+					res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+					return res.redirect('/dashboard');
+				}
 			}
-			return res.redirect('/dashboard')
+		}
+		try {
+			if (!pw.verifyPassword(req.body.input)) {
+				return render(res, req, 'login.ejs', { "error": "You have inputted an incorrect password." });
+			}
+			else {
+				res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+				return res.redirect('/dashboard');
+			}
+		}
+		catch {
+			return render(res, req, 'login.ejs', { "error": "An internal server error has occurred. Please try again later." });
 		}
 	});
 }
