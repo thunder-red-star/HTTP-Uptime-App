@@ -1,11 +1,10 @@
 const url = require("url");
 const path = require("path");
 
-const renderTemplate = (res, req, template, data = {}) => {
+module.exports = (res, req, template, templateDir, data = {}) => {
 	const baseData = {
-		path: req.path,
+		// nothing yet
 	};
-	res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
+	return res.render(path.resolve(`${templateDir}${path.sep}${template}`), Object.assign(baseData, data));
 };
 
-module.exports = renderTemplate();

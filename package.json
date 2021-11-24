@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/thunder-red-star/HTTP-Uptime-App#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "memorystore": "^1.6.6"
   }
 }

@@ -1,3 +1,11 @@
-<%- include("partials/header", { loggedIn, title: "Log In" }) %>
+<%- include("partials/header", { title: "Log In" }) %>
 
+<link href="/pass.css" rel="stylesheet" type="text/css">
+<center>
+<form style="margin-top: 1em;" method="POST"> <!-- method="post" triggers a POST request to the same url with the body of the form control inputs -->
+  <h1 class='pass'>Enter a password</h1>
+  <input class='pass' id='input' type="password" name="input" ><br><br>
+  <button class='pass' id= type="submit">Submit</button>
+</form>
+</center>
 <%- include("partials/footer") %>

@@ -1,8 +1,8 @@
-static function verifyPassword (input) {
+function verifyPassword (input) {
 	return input == process.env.PASSWORD;
 }
 
-static function setPassword (oldPassword, newPassword) {
+function setPassword (oldPassword, newPassword) {
 	if (verifyPassword(oldPassword)) {
 		process.env.PASSWORD = newPassword;
 		return true
