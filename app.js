@@ -58,15 +58,36 @@ module.exports = () => {
 	});
 
 	app.get('/login', (req, res, next) => {
-		return render(res, req, 'login.ejs', templateDir);
+		try {
+			if (req.cookies.saveLogin != undefined) {
+				try {
+					// wipe broken cookie
+					if (!loggedInChecker(req.cookies)) {
+						res.cookie('saveLogin', '', { maxAge: 0 });
+						return render(res, req, 'login.ejs', templateDir, { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
+					}
+					else {
+						res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+						return res.redirect('/dashboard');
+					}
+				}
+				catch {
+					return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
+				}
+			}
+		}
+		catch {
+			return render(res, req, 'login.ejs', templateDir)
+		}
 	});
 
 	app.post('/login', (req, res, next) => {
+		console.log(req.cookies)
 		try {
-			if (res.cookies.saveLogin != undefined) {
+			if (req.cookies.saveLogin != undefined) {
 				try {
 					// wipe broken cookie
-					if (!pw.verifyPassword(req.cookies.saveLogin)) {
+					if (!loggedInChecker(req.cookies)) {
 						res.cookie('saveLogin', '', { maxAge: 0 });
 						return render(res, req, 'login.ejs', templateDir, { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
 					}
