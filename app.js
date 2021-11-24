@@ -3,10 +3,13 @@
 const express = require('express')
 const app = express();
 const session = require("express-session");
+const cookieParser = require('cookie-parser')
 const ejs = require("ejs");
 const MemoryStore = require('memorystore')(session);
 const path = require('path');
 const bodyParser = require("body-parser");
+
+const pw = require('./utils/password.js');
 
 module.exports = () => {
 	const templateDir = path.resolve(`${dataDir}${path.sep}templates`);
@@ -18,8 +21,13 @@ module.exports = () => {
 		saveUninitialized: false,
 	}));
 
+	app.use(express.cookieParser());
+	app.use(bodyParser.json());
+	
 	app.engine("html", ejs.renderFile);
 	app.set("view engine", "html");
 
-	app.use(bodyParser.json());
+	app.get('/login', (res, req, next) => {
+
+	})
 }
