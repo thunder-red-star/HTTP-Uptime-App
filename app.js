@@ -14,13 +14,12 @@ const render = require('./utils/render.js')
 
 const saveAge = 3600000;
 
-function loggedInChecker(res) {
+function loggedInChecker(cookies) {
+	console.log(cookies)
 	try {
-		// check if the cookie exists and has valid password
-		return pw.verifyPassword(res.cookies.saveLogin);
+		return pw.verifyPassword(cookies.saveLogin);
 	}
 	catch {
-		// return false otherwise
 		return false;
 	}
 }
@@ -38,6 +37,10 @@ module.exports = () => {
 	app.use(cookieParser());
 	app.use(bodyParser.json());
 
+	app.use(bodyParser.urlencoded({
+		extended: true
+	}));
+
 	app.engine("html", ejs.renderFile);
 	app.set("view engine", "html");
 
@@ -48,7 +51,7 @@ module.exports = () => {
 	})
 
 	app.get('/dashboard', (req, res, next) => {
-		if (!loggedInChecker(res)) {
+		if (!loggedInChecker(req.cookies)) {
 			return res.redirect('/login')
 		}
 		return render(res, req, 'dashboard.ejs', templateDir);
@@ -64,7 +67,7 @@ module.exports = () => {
 				try {
 					// wipe broken cookie
 					if (!pw.verifyPassword(req.cookies.saveLogin)) {
-						res.clearCookie('saveLogin');
+						res.cookie('saveLogin', '', { maxAge: 0 });
 						return render(res, req, 'login.ejs', templateDir, { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
 					}
 					else {
@@ -78,20 +81,19 @@ module.exports = () => {
 			}
 		}
 		catch {
-
-		}
-		try {
-			console.log(req.body)
-			if (!pw.verifyPassword(req.body.input)) {
-				return render(res, req, 'login.ejs', templateDir, { "error": "You have inputted an incorrect password." });
+			try {
+				console.log(req.body)
+				if (!pw.verifyPassword(req.body.input)) {
+					return render(res, req, 'login.ejs', templateDir, { "error": "You have inputted an incorrect password." });
+				}
+				else {
+					res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+					return res.redirect('/dashboard');
+				}
 			}
-			else {
-				res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
-				return res.redirect('/dashboard');
+			catch {
+				return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
 			}
-		}
-		catch {
-			return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
 		}
 	});
 
