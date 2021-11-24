@@ -10,6 +10,7 @@ const path = require('path');
 const bodyParser = require("body-parser");
 
 const pw = require('./utils/password.js');
+const render = require('./utils/render.js')
 
 module.exports = () => {
 	const templateDir = path.resolve(`${dataDir}${path.sep}templates`);
@@ -21,13 +22,19 @@ module.exports = () => {
 		saveUninitialized: false,
 	}));
 
-	app.use(express.cookieParser());
+	app.use(cookieParser());
 	app.use(bodyParser.json());
-	
+
 	app.engine("html", ejs.renderFile);
 	app.set("view engine", "html");
 
 	app.get('/login', (res, req, next) => {
+		return render(res, req, 'index.ejs');
+	});
 
-	})
+	app.post('/login', (res, req, next) => {
+		if (pw.verifyPassword(req.body.input)) {
+			render(res, req, 'index.ejs', {"error": "You have inputted an incorrect password."});
+		}
+	});
 }
