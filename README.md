@@ -1,4 +1,4 @@
-# HTTP Uptime App
+# HTTP Uptime App (WIP!)
 A simple UptimeRobot style app that sends HTTP requests to specified websites at intervals. 
 ## Features
 * Send requests at specifi-able intervals
