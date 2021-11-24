@@ -19,6 +19,7 @@
   "homepage": "https://github.com/thunder-red-star/HTTP-Uptime-App#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chalk": "^4.1.2",
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
