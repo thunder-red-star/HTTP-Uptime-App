@@ -2,7 +2,20 @@
 	font-family: 'DM Sans';
 }
 
+.err {
+	font-family: 'DM Sans';
+	color: 'red';
+	font-size: 150%;
+}
+
 #input {
 	width: 50%;
 	height: 80px;
+	font-size: 250%;
+}
+
+#submit {
+	width: 15%;
+	height: 50px;
+	font-size: 200%;
 }

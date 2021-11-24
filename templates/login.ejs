@@ -4,7 +4,10 @@
 <center>
 <form style="margin-top: 1em;" method="POST"> <!-- method="post" triggers a POST request to the same url with the body of the form control inputs -->
   <h1 class='pass'>Enter a password</h1>
-  <input class='pass' id='input' type="password" name="input" ><br><br>
+  <input class='pass' id='input' type="password" name="password" ><br>
+  <% try { %>
+  <p class='err' style='color: #FF0000'><%= error %></p>
+  <% } catch {} %>
   <button class='pass' id= type="submit">Submit</button>
 </form>
 </center>

@@ -59,36 +59,45 @@ module.exports = () => {
 	});
 
 	app.post('/login', (req, res, next) => {
-		if (res.cookies.saveLogin != undefined) {
-			try {
-				// wipe broken cookie
-				if (!pw.verifyPassword(req.cookies.saveLogin)) {
-					res.clearCookie('saveLogin');
-					return render(res, req, 'login.ejs', templateDir, { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
+		try {
+			if (res.cookies.saveLogin != undefined) {
+				try {
+					// wipe broken cookie
+					if (!pw.verifyPassword(req.cookies.saveLogin)) {
+						res.clearCookie('saveLogin');
+						return render(res, req, 'login.ejs', templateDir, { "error": "There was a malformed or wrong cookie on your device. We have wiped it. Please try logging in again." });
+					}
+					else {
+						res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+						return res.redirect('/dashboard');
+					}
 				}
-				else {
-					res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
-					return res.redirect('/dashboard');
+				catch {
+					return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
 				}
-			}
-			catch {
-				return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
 			}
 		}
-		else {
-			try {
-				if (!pw.verifyPassword(req.body.input)) {
-					return render(res, req, 'login.ejs', templateDir, { "error": "You have inputted an incorrect password." });
-				}
-				else {
-					res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
-					return res.redirect('/dashboard');
-				}
+		catch {
+
+		}
+		try {
+			console.log(req.body)
+			if (!pw.verifyPassword(req.body.input)) {
+				return render(res, req, 'login.ejs', templateDir, { "error": "You have inputted an incorrect password." });
 			}
-			catch {
-				return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
+			else {
+				res.cookie('saveLogin', process.env.PASSWORD, { maxAge: saveAge });
+				return res.redirect('/dashboard');
 			}
 		}
+		catch {
+			return render(res, req, 'login.ejs', templateDir, { "error": "An internal server error has occurred. Please try again later." });
+		}
+	});
+
+	app.get('/logout', (req, res, next) => {
+		res.cookie('saveLogin', process.env.PASSWORD, { maxAge: 0 });
+		return res.redirect('/dashboard');
 	});
 
 	app.listen(process.env.PORT || 3000, null, null, () => {
